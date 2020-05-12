@@ -11,4 +11,16 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.post("/", async (req, res, next) => {
+  try {
+    const [id] = await db("cars").insert(req.body);
+    const newCar = await db("cars").where({ id });
+    if (newCar) {
+      res.status(201).json(newCar);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
