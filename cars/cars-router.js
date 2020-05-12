@@ -23,4 +23,22 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.get("/:id", async (req, res, next) => {
+  try {
+    const getCar = await db("cars")
+      .where({ id: req.params.id })
+      .first();
+
+    if (getCar) {
+      res.status(201).json(getCar);
+    } else {
+      res.status(401).json({
+        message: "Not Found"
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
