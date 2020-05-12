@@ -23,22 +23,33 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
-  try {
-    const getCar = await db("cars")
-      .where({ id: req.params.id })
-      .first();
+router.get("/:id", (req, res) => {
+    try {
+      const getCar = await db("cars")
+        .where({ id: req.params.id })
+        .first();
 
-    if (getCar) {
-      res.status(201).json(getCar);
-    } else {
-      res.status(401).json({
-        message: "Not Found"
-      });
+      if (getCar) {
+        res.status(201).json(getCar);
+      } else {
+        res.status(401).json({
+          message: "Not Found"
+        });
+      }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
-  }
+//   db("cars")
+//     .where({ id: req.params.id })
+//     .first()
+//     .then(car => {
+//       if (car) {
+//         return res.json(car);
+//       } else {
+//         return res.status(401).json({ message: "Not Found" });
+//       }
+//     })
+//     .catch(err => console.log(err));
 });
 
 router.put("/:id", async (req, res, next) => {
@@ -48,7 +59,10 @@ router.put("/:id", async (req, res, next) => {
       .where({ id: req.params.id });
 
     if (updatedCar) {
-      res.status(201).json(updatedCar);
+      const newCar = await db("cars")
+        .where({ id: req.params.id })
+        .first();
+      res.status(201).json(newCar);
     } else {
       res.status(401).json({
         message: "Not Found"
