@@ -45,8 +45,7 @@ router.put("/:id", async (req, res, next) => {
   try {
     const updatedCar = await db("cars")
       .update(req.body)
-      .where({ id: req.params.id })
-
+      .where({ id: req.params.id });
 
     if (updatedCar) {
       res.status(201).json(updatedCar);
@@ -55,6 +54,18 @@ router.put("/:id", async (req, res, next) => {
         message: "Not Found"
       });
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    await db("cars")
+      .where({ id: req.params.id })
+      .del();
+
+    res.status(200).end();
   } catch (err) {
     next(err);
   }
